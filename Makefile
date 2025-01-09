@@ -16,3 +16,13 @@ client: client.o libft
 
 %.o: %.c
 	$(CC) $(CFLAGS) 
+
+clean:
+	rm -f $(OBJS)
+	make -C libft clean
+
+fclean: clean
+	rm -f server client
+	make -C libft fclean
+
+re: fclean all

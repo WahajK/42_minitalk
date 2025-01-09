@@ -1,2 +1,4 @@
 /libft/.vscode/
-/libft/libft.a
+*.o
+*.a
+*.out
