@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:49 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/01/12 21:12:51 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/01/12 22:06:23 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,27 @@
 #include "libft/libft.h"
 #include "minitalk.h"
 
-t_msg	message = {0, 0};
+t_msg	g_message = {0, 0};
 
 static void	sig_handler(int signum, siginfo_t *info, void *context)
 {
 	(void)context;
 	if (signum == SIGUSR1)
-		message.c |= (1 << (7 - message.bits));
-	message.bits++;
-	if (message.bits == 8)
+		g_message.c |= (1 << (7 - g_message.bits));
+	g_message.bits++;
+	if (g_message.bits == 8)
 	{
-		if (message.c == '\0')
+		if (g_message.c == '\0')
 		{
 			ft_printf("%c", '\n');
-			kill(info->si_pid, SIGUSR1);
+			kill(info->si_pid, SIGUSR2);
 		}
 		else
-			ft_printf("%c", message.c );
-		message.bits = 0;
-		message.c  = 0;
+			ft_printf("%c", g_message.c);
+		g_message.bits = 0;
+		g_message.c = 0;
 	}
+	kill(info->si_pid, SIGUSR1);
 }
 
 int	main(void)
@@ -45,7 +46,8 @@ int	main(void)
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;
 	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1
+		|| sigaction(SIGUSR2, &sa, NULL) == -1)
 	{
 		ft_printf("Sigaction Error");
 		return (1);

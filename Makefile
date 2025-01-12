@@ -1,7 +1,7 @@
 SOURCES = server.c client.c
 OBJECTS = $(SOURCES:.c=.o)
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 all: server client

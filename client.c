@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:43 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/01/12 21:12:54 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/01/12 22:05:45 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <signal.h>
 #include "libft/libft.h"
 
+int	g_bit_control = 1;
 
 static void	send_message(unsigned char c, int pid)
 {
@@ -23,6 +24,7 @@ static void	send_message(unsigned char c, int pid)
 	i = 7;
 	while (i >= 0)
 	{
+		g_bit_control = 0;
 		if ((c >> i) & 1)
 		{
 			if (kill(pid, SIGUSR1) == -1)
@@ -39,7 +41,8 @@ static void	send_message(unsigned char c, int pid)
 				exit(1);
 			}
 		}
-		usleep(100);
+		while (g_bit_control != 1)
+			usleep(10);
 		i--;
 	}
 }
@@ -47,26 +50,23 @@ static void	send_message(unsigned char c, int pid)
 static void	handle_ack(int signum)
 {
 	(void)signum;
-	ft_printf("Message received by server!\n");
+	if (signum == SIGUSR1)
+		g_bit_control = 1;
+	else if (signum == SIGUSR2)
+	{
+		ft_printf("Message received by server!\n");
+		exit(1);
+	}
 }
 
 int	main(int argc, char *argv[])
 {
 	int					pid;
 	unsigned char		*ptr;
-	struct sigaction	sa;
 
 	pid = ft_atoi(argv[1]);
-	sa.sa_flags = 0;
-	sa.sa_handler = handle_ack;
-	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGUSR1);
-	sigaddset(&sa.sa_mask, SIGUSR2);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1)
-	{
-		ft_printf("Sigaction Error\n");
-		return (1);
-	}
+	signal(SIGUSR1, &handle_ack);
+	signal(SIGUSR2, &handle_ack);
 	if (argc != 3)
 		ft_printf("Usage: %s [server PID] [message]\n", argv[0]);
 	else
@@ -76,4 +76,6 @@ int	main(int argc, char *argv[])
 			send_message(*(ptr++), pid);
 		send_message('\0', pid);
 	}
+	while (1)
+		pause();
 }
