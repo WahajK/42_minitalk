@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:43 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/01/10 00:29:08 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/01/12 21:12:54 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include <signal.h>
 #include "libft/libft.h"
 
-void	send_message(unsigned char c, int pid)
+
+static void	send_message(unsigned char c, int pid)
 {
 	int	i;
 
@@ -38,18 +39,34 @@ void	send_message(unsigned char c, int pid)
 				exit(1);
 			}
 		}
-		usleep(500);
+		usleep(100);
 		i--;
 	}
+}
+
+static void	handle_ack(int signum)
+{
+	(void)signum;
+	ft_printf("Message received by server!\n");
 }
 
 int	main(int argc, char *argv[])
 {
 	int					pid;
 	unsigned char		*ptr;
+	struct sigaction	sa;
 
 	pid = ft_atoi(argv[1]);
-	ft_printf("PID %d", pid);
+	sa.sa_flags = 0;
+	sa.sa_handler = handle_ack;
+	sigemptyset(&sa.sa_mask);
+	sigaddset(&sa.sa_mask, SIGUSR1);
+	sigaddset(&sa.sa_mask, SIGUSR2);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+	{
+		ft_printf("Sigaction Error\n");
+		return (1);
+	}
 	if (argc != 3)
 		ft_printf("Usage: %s [server PID] [message]\n", argv[0]);
 	else
