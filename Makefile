@@ -15,7 +15,7 @@ client: client.o libft
 	$(CC) -o $@ $< -Llibft -lft
 
 %.o: %.c
-	$(CC) $(CFLAGS) 
+	$(CC) $(CFLAGS) $?
 
 clean:
 	rm -f $(OBJS)
