@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:49 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/01/12 22:06:23 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/01/15 18:52:29 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "libft/libft.h"
 #include "minitalk.h"
 
-t_msg	g_message = {0, 0};
+t_msg		g_message = {0, 0};
 
 static void	sig_handler(int signum, siginfo_t *info, void *context)
 {

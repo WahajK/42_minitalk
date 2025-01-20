@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:43 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/01/12 22:05:45 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/01/15 18:52:05 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,15 @@ static void	send_message(unsigned char c, int pid)
 	while (i >= 0)
 	{
 		g_bit_control = 0;
+		if (kill(pid, 0) == -1)
+		{
+			ft_printf("Invalid PID\n");
+			exit(1);
+		}
 		if ((c >> i) & 1)
-		{
-			if (kill(pid, SIGUSR1) == -1)
-			{
-				ft_printf("Invalid PID\n");
-				exit(1);
-			}
-		}
+			kill(pid, SIGUSR1);
 		else
-		{
-			if (kill(pid, SIGUSR2) == -1)
-			{
-				ft_printf("Invalid PID\n");
-				exit(1);
-			}
-		}
+			kill(pid, SIGUSR2);
 		while (g_bit_control != 1)
 			usleep(10);
 		i--;
