@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:43 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/01/15 18:52:05 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/02/01 16:36:25 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	main(int argc, char *argv[])
 		while (*ptr)
 			send_message(*(ptr++), pid);
 		send_message('\0', pid);
-	}
-	while (1)
+		while (1)
 		pause();
+	}
 }
