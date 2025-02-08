@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 22:59:43 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/02/01 16:36:25 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/02/04 20:09:34 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,18 @@ int	main(int argc, char *argv[])
 	int					pid;
 	unsigned char		*ptr;
 
-	pid = ft_atoi(argv[1]);
 	signal(SIGUSR1, &handle_ack);
 	signal(SIGUSR2, &handle_ack);
 	if (argc != 3)
 		ft_printf("Usage: %s [server PID] [message]\n", argv[0]);
 	else
 	{
+		pid = ft_atoi(argv[1]);
 		ptr = (unsigned char *) argv[2];
 		while (*ptr)
 			send_message(*(ptr++), pid);
 		send_message('\0', pid);
 		while (1)
-		pause();
+			pause();
 	}
 }
